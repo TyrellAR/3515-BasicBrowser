@@ -1,5 +1,6 @@
 package edu.temple.basicbrowser
 
+import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.webkit.WebView
@@ -13,6 +14,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var goButton: ImageButton
     lateinit var webView: WebView
 
+    @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -25,8 +27,21 @@ class MainActivity : AppCompatActivity() {
         webView.webViewClient = object: WebViewClient() {
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
+                title = webView.title
             }
         }
 
+        webView.settings.javaScriptEnabled = true
+
+        goButton.setOnClickListener {
+            var url = urlEditText.text.toString()
+            if (!url.startsWith("http://") && !url.startsWith("https://")){
+                url = "https://$url"
+                urlEditText.setText(url)
+            }
+            webView.loadUrl(url)
+        }
+
     }
+
 }
